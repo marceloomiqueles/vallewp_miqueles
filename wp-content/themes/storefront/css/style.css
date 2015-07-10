@@ -1,0 +1,476 @@
+html {
+	position: relative;
+	min-height: 100%;
+	margin-top: 0;
+}
+
+body {
+	margin-bottom: 60px;
+	background-image: url("../images/bg-index.jpg");
+	background-repeat: no-repeat;
+	background-position: top center;
+	background-position-y: 0px;
+	background-color: #FFF;
+}
+
+.imagen_valle {
+  	background-image: url("http://store.vallenevado.com/tienda_wp/wp-content/uploads/2015/05/logo_valle.png");
+  	width: 215px;
+  	height: 135px;
+  	left: 32px;
+  	background-repeat: no-repeat;
+  	position: relative;
+  	float: left;
+}
+
+.lead {
+	min-height: 802px;
+}
+
+.bg-blanco {
+	background: #FFF;
+}
+
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	min-height: 60px;
+	height: auto;
+	background-color: #CDCDCD;
+	font-weight: bold;
+}
+
+.container {
+	width: auto;
+	max-width: 1040px;
+	padding: 0 15px;
+}
+
+.jumbotron {
+	background-color: #FFF;
+}
+
+.jumbotron .container {
+	max-width: 1050px;
+}
+
+.container .text-muted {
+	margin: 20px 0;
+	float: left;
+	width: 85%;
+}
+
+.mix {
+	min-height: 200px;
+}
+
+.day {
+  	border-bottom: 1px gray solid;
+  	border-left: 1px solid gray;
+}
+
+.days .day {
+  	height: 121px;
+  	font-size: 31px;
+}
+
+.day-headers {
+	border-top: 1px gray solid;
+  	border-right: 1px solid gray;	
+}
+
+.days {
+  	border-right: 1px solid gray;	
+}
+
+.responsive-calendar .day.active a {
+	background: #033d5a;
+}
+
+.responsive-calendar .day.active a:hover {
+	background: #033d5a;
+}
+
+.responsive-calendar .day a {
+	cursor: default;
+	padding: 38px 0;
+	background: #0075c8;
+	color: #FFF;
+}
+
+.responsive-calendar .Sab a, .responsive-calendar .Dom a {
+	background: #033d5a;
+}
+
+.responsive-calendar .day a:hover {
+	color: #000;
+}
+
+.responsive-calendar .not-current a {
+	background: #FFF;
+}
+
+.responsive-calendar .not-current a:hover {
+	color: #DDD;
+}
+
+h4.calendar-title {
+	font-size: 31px;
+}
+
+.categoria-thumb {
+	margin: 15px 0;
+}
+
+.fondo-categoria {
+	margin: 0 auto;
+	height: inherit;
+	width: 243px;
+	position: relative;
+}
+
+.caja-categoria {
+	height: 287px;
+}
+
+.texto-categoria {
+	width: 243px;
+	height: 54px;
+	position: absolute;
+	bottom: 0;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.texto-categoria:hover {
+	height: 287;
+}
+
+.titulo-calendario {
+	border-top: 2px #033d5a solid;
+	border-bottom: 2px #033d5a solid;
+}
+
+.titulo-calendario h1 {
+	margin: 10px 0;
+	text-transform: uppercase;
+}
+
+.texto-azul {
+	color: #033d5a;
+}
+
+.cuadro1 {
+  position: relative;
+  float: left;
+  width: 14px;
+  height: 14px;
+  background-color: #033d5a;
+  margin-right: 10px;
+  margin-top: 3px;
+}
+
+.cuadro2 {
+  position: relative;
+  float: left;
+  width: 14px;
+  height: 14px;
+  background-color: #0075c8;
+  margin-right: 10px;
+  margin-top: 3px;
+}
+
+.imagen-login {
+	/*background: url("../images/menu.png");*/
+	color: #FFF;
+}
+
+.menu-interior {
+	position: relative;
+	margin-top: 14px;
+	margin-left: 3px;
+	height: 30px;
+}
+
+.menu-cursor {
+	cursor: pointer;
+}
+
+/*-------------------------------------------------------------------------------*/
+
+.calendarBox {
+	min-height: 450px;
+}
+
+.responsive-calendar {
+	height: 339px;
+	overflow: hidden;
+}
+
+.calendarBoxIntExt {
+	height: auto;
+}
+	
+.cont_btn_ver {
+	position: relative;
+	width: 100%;
+	margin: 0 auto;
+	padding-top: 13px;
+	height: 89px;
+	margin-bottom: 10px;
+}
+
+.btn_ver_todo {
+	position: relative;
+	background-image: url("../images/btn_ver_todo.png");
+	width: 105px;
+	height: 70px;
+	margin: 0 auto;
+	cursor: pointer;
+}
+
+.btn_ver_todo_2 {
+	background-image: url("../images/btn_ver_todo2.png");
+}
+
+#btl-content > .btl-content-block {
+	position: absolute!important;
+	z-index: 9999;
+}
+
+.btl-content-block {
+	background: none repeat scroll 0 0 #FFF;
+	border-radius: 4px;
+	border: 1px solid #DADADA;
+	box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.4);
+	/*display: none;*/
+	height: auto;
+	overflow: hidden;
+	text-align: left;
+	font-size: 12px;
+}
+
+.btl-content-block form {
+	margin: 0;
+	padding: 0;
+	color: #333;
+}
+
+
+/*------------------------------------------------------------------------*/
+
+#btl-content #btl-content-login {
+	width: 350px;
+	color: #333;
+}
+
+#btl-register-in-process, #btl-login-in-process {
+	  display: none;
+  background: url("../images/loading.gif") no-repeat #000 50%;
+  opacity: 0.4;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 9999;
+  top: -1px;
+  left: -1px;
+  padding-top: 1px;
+  padding-left: 1px;
+}
+
+.btl-content-block h3 {
+	background: url("../images/header_bglogin.jpg") repeat-x scroll left top transparent;
+  font-weight: normal;
+  line-height: 35px;
+  margin: 0px;
+  padding: 3px 0px 0px 19px!important;
+  text-transform: uppercase;
+  font-size: 18px;
+  color: #333;
+}
+
+.btl-note, #register-link {
+	padding: 18px 0px;
+}
+
+.btl-field, #register-link, .btl-error-detail, .btl-error, .btl-note {
+	margin-left: 20px;
+  margin-right: 25px!important;
+  overflow: hidden;
+}
+
+.btl-error {
+	display: none;
+}
+
+.btl-error {
+	color: #F00;
+}
+
+#btl-content #btl-content-login .btl-label {
+	line-height: 38px;
+  min-width: 0px!important;
+}
+
+.btl-label, .btl-input {
+	  line-height: 38px;
+  height: 38px;
+}
+
+.btl-label {
+  float: left!important;
+}
+
+#btl-content-login .btl-input {
+  float: right;
+}
+
+.btl-input {
+  float: right!important;
+}
+
+.btl-label, .btl-input {
+  line-height: 38px;
+  height: 38px;
+}
+
+#btl-content-login .btl-input input {
+  width: 190px;
+}
+
+.btl-input > input[type=text], .btl-input > input[type=password], #recaptcha > input {
+  border: 1px solid #dadada;
+  border-radius: 4px;
+  margin: 5px 0;
+  text-indent: 5px;
+  width: 189px;
+  height: 26px;
+  padding: 0;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+  transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+}
+
+#btl-content-login .btl-input input {
+  width: 190px;
+}
+
+#btl-content-login .btl-input {
+	float: right;
+}
+
+#btl-checkbox-remember {
+  width: 15px!important;
+  vertical-align: middle;
+  padding: 0;
+  margin: 0;
+}
+
+input.btl-buttonsubmit {
+  background-color: #033d5a !important;
+}
+
+#btl .btl-panel > span, button.btl-buttonsubmit, input.btl-buttonsubmit {
+  border-radius: 3px;
+}
+
+input.btl-buttonsubmit, button.btl-buttonsubmit {
+  border: none!important;
+  box-shadow: 1px 1px 3px rgba(9,4,3,0.86);
+  cursor: pointer;
+  text-align: center!important;
+  text-shadow: 0 1px 1px #4A4A4A;
+  width: auto!important;
+  padding: 0 12px;
+  height: 29px!important;
+  line-height: 29px!important;
+  display: inline-block;
+}
+
+div.btl-buttonsubmit {
+  text-align: center!important;
+  padding: 5px 0 0 0!important;
+  border-top: 1px solid #dddddd;
+  margin: 10px 25px 30px 20px;
+}
+
+#btl-content div.btl-buttonsubmit {
+  border-top: 1px dotted #c4c4c4;
+}
+
+.clear {
+  clear: both;
+}
+
+#btl-content-login ul li {
+  margin-top: 3px;
+}
+
+#bt_ul li a {
+  padding: 0!important;
+  text-decoration: none!important;
+  color: #545454!important;
+}
+
+#bt_ul {
+  margin-top: -10px!important;
+  margin-bottom: 20px!important;
+  margin-right: 25px!important;
+  float: right;
+}
+
+#btl-content-login ul {
+  position: static!important;
+  text-align: left;
+  list-style-type: disc !important;
+}
+
+#btl-content-registration {
+	position: absolute;
+}
+
+button.cta, button.alt, input[type="button"].cta, input[type="button"].alt, input[type="reset"].cta, input[type="reset"].alt, input[type="submit"].cta, input[type="submit"].alt, .button.cta, .button.alt, .added_to_cart.cta, .added_to_cart.alt {
+	background-color: #337ab7;
+}
+
+button.alt:hover, input[type="button"].alt:hover, input[type="reset"].alt:hover, input[type="submit"].alt:hover, .button.alt:hover, .added_to_cart.alt:hover, .widget-area .widget a.button.alt:hover, .added_to_cart:hover {
+	background-color: #337ab7;
+}
+
+button, input[type="button"], input[type="reset"], input[type="submit"], .button, .added_to_cart, .widget-area .widget a.button, .site-header-cart .widget_shopping_cart a.button {
+	background-color: #337ab7;
+}
+
+button:hover, input[type="button"]:hover, input[type="reset"]:hover, input[type="submit"]:hover, .button:hover, .added_to_cart:hover, .widget-area .widget a.button:hover, .site-header-cart .widget_shopping_cart a.button:hover {
+	background-color: #337ab7;
+}
+
+a:focus, .button:focus, .button.alt:focus, .button.added_to_cart:focus, .button.wc-forward:focus, button:focus, input[type="button"]:focus, input[type="reset"]:focus, input[type="submit"]:focus {
+	outline-color: #337ab7;
+}
+
+button:focus, input[type="button"]:focus, input[type="reset"]:focus, input[type="submit"]:focus, .button:focus, .added_to_cart:focus {
+	outline-color: #337ab7;
+}
+
+#order_review_heading, #order_review {
+	border: 1px solid #337ab7;
+}
+
+.azul-profundo {
+  background-color: #004E6F;
+}
+
+.logo-agua {
+	height: 60px;
+	width: 15%;
+	float: left;
+}
+
+.logo-agua img {
+	height: 60px;
+}
+
+.site-header-cart .widget_shopping_cart {
+  background-color: #F0F0F0;
+}
