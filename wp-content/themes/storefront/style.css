@@ -1821,6 +1821,18 @@ fieldset {
   cursor: pointer;
 }
 
+.entel-logo {
+  position: absolute;
+  margin: 0 50%;
+  left: -120px;
+  top: 400px;
+  width: 240px;
+  height: 89px;
+  background-image: url(images/entel.png);
+  cursor: pointer;
+  background-size: 243px;
+}
+
 .azul-profundo {
   background-color: #004E6F;
 }

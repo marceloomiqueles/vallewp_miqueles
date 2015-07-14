@@ -1830,7 +1830,7 @@ abstract class WC_Abstract_Order {
 		if ($new_status == 'processing' && $this->get_status() != "completed") {
 			$order_verify = new WC_Order($this->id);
 			global $wpdb;
-			foreach( $order_verify->get_items() as $item_id => $item ) {
+				foreach( $order_verify->get_items() as $item_id => $item ) {
 				$product_verify = new WC_Product($item["product_id"]);
 				$sku_ticket = $product_verify->get_sku();
 				for ($i = 0; $i < $item["qty"][0]; $i++) {

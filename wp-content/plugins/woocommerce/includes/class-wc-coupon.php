@@ -119,6 +119,15 @@ class WC_Coupon {
 	 */
 	private function get_coupon( $code ) {
 
+		$cant = 0;
+		$cantidad = 0;
+		foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
+			$cant++;
+			$cantidad = $cart_item['quantity'] . "<br><br>";
+		}
+
+		// echo "$cant $cantidad";
+
 		$this->code  = apply_filters( 'woocommerce_coupon_code', $code );
 		
 		if ($code != "") {
@@ -193,6 +202,9 @@ class WC_Coupon {
 				}
 			}
 		}
+
+		if ($cant == 1 && $cantidad == 1 && $data["tipo"] == "2x1 martes")
+			return false;
 
 		// Coupon data lets developers create coupons through code
 		if ( $coupon = apply_filters( 'woocommerce_get_shop_coupon_data', false, $this->code ) ) {
