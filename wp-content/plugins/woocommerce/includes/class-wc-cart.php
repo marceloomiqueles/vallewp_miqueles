@@ -1181,7 +1181,6 @@ class WC_Cart {
 			 */
 
 			$descuentos = array();
-
 			foreach ( $this->get_cart() as $cart_item_key => $values ) {
 
 				$_product = $values['data'];
@@ -1206,57 +1205,29 @@ class WC_Cart {
 					$term_list = wp_get_post_terms( $_product->id, 'product_cat', array('fields'=>'ids') );
 					$term = get_term_by( 'id', $term_list[0], 'product_cat', 'ARRAY_A' );
 					if ( $term['name'] == "Tickets" ) {
-						if (count($descuentos[0]) <= 3) {
-							$discounted_price      = $this->get_discounted_price( $values, $base_price, true );
-							if ($values['quantity'] > 4)
-								$discounted_price 	  += (max($values['quantity'] - 4, 0) * $regular_price * 0.0326249);
-						} else
-							$discounted_price      = $base_price;
+						$discounted_price      = $this->get_discounted_price( $values, $base_price, true, count($descuentos[0]) );
 						for ($i = 0; $i < $values["quantity"]; $i++)
 							$descuentos[0][] = $regular_price;
-					} else {
-						$discounted_price      = $base_price;
-					}
-					if ( $term['name'] == "Almuerzos" ) {
-						if (count($descuentos[1]) <= 3) {
-							$discounted_price      = $this->get_discounted_price( $values, $base_price, true );
-							if ($values['quantity'] > 4)
-								$discounted_price 	  += (max($values['quantity'] - 4, 0) * $regular_price * 0.0326249);
-						} else
-							$discounted_price      = $base_price;
+					} elseif ( $term['name'] == "Almuerzos" ) {
+						$discounted_price      = $this->get_discounted_price( $values, $base_price, true, count($descuentos[1]) );
 						for ($i = 0; $i < $values["quantity"]; $i++)
 							$descuentos[1][] = $regular_price;
-					} else {
-						$discounted_price      = $base_price;
-					}
-					if ( $term['name'] == "Rental" ) {
-						if (count($descuentos[2]) <= 3) {
-							$discounted_price      = $this->get_discounted_price( $values, $base_price, true );
-							if ($values['quantity'] > 4)
-								$discounted_price 	  += (max($values['quantity'] - 4, 0) * $regular_price * 0.0326249);
-						} else
-							$discounted_price      = $base_price;
+					} elseif ( $term['name'] == "Rental" ) {
+						$discounted_price      = $this->get_discounted_price( $values, $base_price, true, count($descuentos[2]) );
 						for ($i = 0; $i < $values["quantity"]; $i++)
 							$descuentos[2][] = $regular_price;
-					} else {
-						$discounted_price      = $base_price;
-					}
-					if ( $term['name'] == "Clases" ) {
-						if (count($descuentos[3]) <= 3) {
-							$discounted_price      = $this->get_discounted_price( $values, $base_price, true );
-							if ($values['quantity'] > 4)
-								$discounted_price 	  += (max($values['quantity'] - 4, 0) * $regular_price * 0.0326249);
-						} else
-							$discounted_price      = $base_price;
+					} elseif ( $term['name'] == "Clases" ) {
+						$discounted_price      = $this->get_discounted_price( $values, $base_price, true, count($descuentos[3]) );
 						for ($i = 0; $i < $values["quantity"]; $i++)
 							$descuentos[3][] = $regular_price;
 					} else {
 						$discounted_price      = $base_price;
 					}
+
 					$line_subtotal_tax     = 0;
 					$line_subtotal         = $line_price;
 					$line_tax              = 0;
-					$line_total            = WC_Tax::round( $discounted_price * $values['quantity'] );
+					$line_total            = WC_Tax::round( $discounted_price * $values["quantity"] );
 
 				/**
 				 * Prices include tax
@@ -1351,8 +1322,6 @@ class WC_Cart {
 				// Store rates ID and costs - Since 2.2
 				$this->cart_contents[ $cart_item_key ]['line_tax_data']     = array( 'total' => $discounted_taxes, 'subtotal' => $taxes );
 			}
-
-			// print_r($descuentos);die();
 
 			// Only calculate the grand total + shipping if on the cart/checkout
 			if ( is_checkout() || is_cart() || defined('WOOCOMMERCE_CHECKOUT') || defined('WOOCOMMERCE_CART') ) {
@@ -1853,7 +1822,7 @@ class WC_Cart {
 		 * @param bool $add_totals (default: false)
 		 * @return float price
 		 */
-		public function get_discounted_price( $values, $price, $add_totals = false ) {
+		public function get_discounted_price( $values, $price, $add_totals = false, $final_count = false ) {
 			if ( ! $price ) {
 				return $price;
 			}
@@ -1863,29 +1832,39 @@ class WC_Cart {
 				$product = $values['data'];
 
 				foreach ( $this->coupons as $code => $coupon ) {
-					// var_dump($coupon);die();
-							
 					if ( $coupon->is_valid() && ( $coupon->is_valid_for_product( $product, $values ) || $coupon->is_valid_for_cart() ) ) {
-						$discount_amount = $coupon->get_discount_amount( $product->regular_price, $values, $single = true );
-						$price           = max( $price - ($price - ($product->regular_price - $discount_amount)), 0 );
+						$discount_amount = $coupon->get_discount_amount( $price, $values, $single = true );
+						/*MMiqueles*/
+						$cantidad 		 = min(max(min($values['quantity'],  4 - $final_count), 0), 4 );
+						$price           = $price - (( $discount_amount * $cantidad) / $values['quantity']);
+						/*MMiqueles Fin*/
 
 						// Store the totals for DISPLAY in the cart
 
 						if ( $add_totals ) {
-							$total_discount     = $discount_amount * min($values['quantity'], 4);
+							if ($coupon->amount == 15 and $final_count <= 4)
+								$total_discount     = $discount_amount * min($values['quantity'], 4 - $final_count);
+							elseif ($coupon->amount == 15 and $final_count > 4)
+								$total_discount     = 0;
+							else
+								$total_discount     = $discount_amount * $values['quantity'];
 							$total_discount_tax = 0;
 
 							if ( wc_tax_enabled() ) {
 								$tax_rates          = WC_Tax::get_rates( $product->get_tax_class() );
 								$taxes              = WC_Tax::calc_tax( $discount_amount, $tax_rates, $this->prices_include_tax );
-								$total_discount_tax = WC_Tax::get_tax_total( $taxes ) * min($values['quantity'], 4);
+								$total_discount_tax = WC_Tax::get_tax_total( $taxes ) * $values['quantity'];
 								$total_discount     = $this->prices_include_tax ? $total_discount - $total_discount_tax : $total_discount;
 								$this->discount_cart_tax += $total_discount_tax;
 							}
 
 							$this->discount_cart     += $total_discount;
 							$this->increase_coupon_discount_amount( $code, $total_discount, $total_discount_tax );
-							$this->increase_coupon_applied_count( $code, min($values['quantity'], 4) );
+
+							if ($coupon->amount == 15 and $final_count <= 4)
+								$this->increase_coupon_applied_count( $code, min($values['quantity'], 4 - $final_count) );
+							else
+								$this->increase_coupon_applied_count( $code, $values['quantity'] );
 						}
 					}
 				}

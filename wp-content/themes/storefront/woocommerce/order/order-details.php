@@ -11,67 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-$order = wc_get_order( $order_id );
-
-
-// $url = "http://ticketapi.marketingrelacional.co/api/getCodigoQuemar/1/VALLENEVADO/0/39000/JSON";
-
-// $result = file_get_contents($url);
-// var_dump(json_decode($result, true));
-// $data = json_decode($result, true);
-// print_r($data);
-
-// Result
-// Array ( 
-// 	[0] => Array ( [status] => OK ) 
-// 	[1] => Array ( [count] => 1 ) 
-// 	[2] => Array ( [msg] => Transacción Completada. ) 
-// 	[3] => Array ( 
-// 		[codigo] => 154896545563248 
-// 		[fechaCreacion] => 22/06/2015 11:21:28 
-// 		[empresa] => VALLENEVADO 
-// 		[valorPesos] => 39000 
-// 		[valorPuntos] => 39000 
-// 		[estado] => ACTIVO 
-// 		[fechaExpiracionTicket] => 
-// 		[tipoPagoFactura] => 
-// 		[tipoPagoUsuario] => 
-// 		[procedenciaPeticion] => 
-// 		[descripcionInterna] => GIFTCARD 
-// 		[descripcionTicket] => GIFTCARD 
-// 		[mensajeTicket] => GIFTCARD 
-// 		[tipoTicket] => 
-// 		[fechaQuemado] => 
-// 	) 
-// )
-
-$coupon_code = 'UNIQUECODE4'; // Code
-$amount = '100'; // Amount
-$discount_type = 'percent_product'; // Type: fixed_cart, percent, fixed_product, percent_product
-					
-$coupon = array(
-	'post_title' => $coupon_code,
-	'post_content' => '',
-	'post_status' => 'publish',
-	'post_author' => 1,
-	'post_type'		=> 'shop_coupon'
-);
-					
-$new_coupon_id = wp_insert_post( $coupon );
-					
-// Add meta
-update_post_meta( $new_coupon_id, 'discount_type', $discount_type );
-update_post_meta( $new_coupon_id, 'coupon_amount', $amount );
-update_post_meta( $new_coupon_id, 'individual_use', 'yes' );
-update_post_meta( $new_coupon_id, 'product_ids', '14' );
-update_post_meta( $new_coupon_id, 'exclude_product_ids', '' );
-update_post_meta( $new_coupon_id, 'usage_limit', '1' );
-update_post_meta( $new_coupon_id, 'usage_limit_per_user', '1' );
-update_post_meta( $new_coupon_id, 'limit_usage_to_x_items', '1' );
-update_post_meta( $new_coupon_id, 'expiry_date', '' );
-update_post_meta( $new_coupon_id, 'apply_before_tax', 'yes' );
-update_post_meta( $new_coupon_id, 'free_shipping', 'no' );
-
 ?>
 <h2><?php _e( 'Order Details', 'woocommerce' ); ?></h2>
 <table class="shop_table order_details">

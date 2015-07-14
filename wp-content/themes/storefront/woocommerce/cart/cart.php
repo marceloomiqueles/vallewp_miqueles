@@ -32,7 +32,6 @@ do_action( 'woocommerce_before_cart' ); ?>
 	</thead>
 	<tbody>
 		<?php do_action( 'woocommerce_before_cart_contents' ); ?>
-		<?php // print_r(WC()->cart->get_cart());die(); ?>
 		<?php
 		foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
 			$_product     = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
@@ -62,14 +61,7 @@ do_action( 'woocommerce_before_cart' ); ?>
 
 					<td class="product-name">
 						<?php
-							//if ( ! $_product->is_visible() ) {
-								echo apply_filters( 'woocommerce_cart_item_name', $_product->get_title(), $cart_item, $cart_item_key ) . '&nbsp;';
-							//} else {
-							//	echo apply_filters( 'woocommerce_cart_item_name', sprintf( '<a href="%s">%s </a>', esc_url( $_product->get_permalink( $cart_item ) ), $_product->get_title() ), $cart_item, $cart_item_key );
-							//}
-
-							// Meta data
-							//echo WC()->cart->get_item_data( $cart_item );
+							echo apply_filters( 'woocommerce_cart_item_name', $_product->get_title(), $cart_item, $cart_item_key ) . '&nbsp;';
 
 							// Backorder notification
 							if ( $_product->backorders_require_notification() && $_product->is_on_backorder( $cart_item['quantity'] ) ) {
@@ -118,8 +110,8 @@ do_action( 'woocommerce_before_cart' ); ?>
 			<td colspan="6" class="actions">
 
 				<?php if ( WC()->cart->coupons_enabled() ) { ?>
-						<img src='<?php echo get_template_directory_uri(); ?>/images/entel.png'>
-					<div class="coupon entel">
+						<img src='<?php echo get_template_directory_uri(); ?>/images/entel.png' class='entel'>
+					<div class="coupon">
 
 						<label for="coupon_code"><?php _e( 'Coupon', 'woocommerce' ); ?>:</label> <input type="text" name="coupon_code" class="input-text" id="coupon_code" value="" placeholder="<?php _e( 'Código Desc. Entel', 'woocommerce' ); ?>" /> <input type="submit" class="button" name="apply_coupon" value="<?php _e( 'Aplicar Descuento', 'woocommerce' ); ?>" />
 

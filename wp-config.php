@@ -19,7 +19,7 @@
 define('DB_NAME', 'wp_2015');
 
 /** MySQL database username */
-define('DB_USER', 'daemon');
+define('DB_USER', 'root');
 
 /** MySQL database password */
 define('DB_PASSWORD', '');

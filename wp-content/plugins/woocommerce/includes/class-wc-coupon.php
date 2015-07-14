@@ -119,65 +119,80 @@ class WC_Coupon {
 	 */
 	private function get_coupon( $code ) {
 
-		// if (substr($code, 0, 1) == "1")
-		// 	$coupon_code = 'UNIQUECODE3'; // Code
-		// 	$amount = '100'; // Amount
-		// 	$discount_type = 'percent_product'; // Type: fixed_cart, percent, fixed_product, percent_product
-								
-		// 	$coupon = array(
-		// 		'post_title' => $coupon_code,
-		// 		'post_content' => '',
-		// 		'post_status' => 'publish',
-		// 		'post_author' => 1,
-		// 		'post_type'		=> 'shop_coupon'
-		// 	);
-								
-		// 	$new_coupon_id = wp_insert_post( $coupon );
-								
-		// 	// Add meta
-		// 	update_post_meta( $new_coupon_id, 'discount_type', $discount_type );
-		// 	update_post_meta( $new_coupon_id, 'coupon_amount', $amount );
-		// 	update_post_meta( $new_coupon_id, 'individual_use', 'yes' );
-		// 	update_post_meta( $new_coupon_id, 'product_ids', '14' );
-		// 	update_post_meta( $new_coupon_id, 'exclude_product_ids', '' );
-		// 	update_post_meta( $new_coupon_id, 'usage_limit', '1' );
-		// 	update_post_meta( $new_coupon_id, 'usage_limit_per_user', '1' );
-		// 	update_post_meta( $new_coupon_id, 'limit_usage_to_x_items', '1' );
-		// 	update_post_meta( $new_coupon_id, 'expiry_date', '' );
-		// 	update_post_meta( $new_coupon_id, 'apply_before_tax', 'yes' );
-		// 	update_post_meta( $new_coupon_id, 'free_shipping', 'no' );
-		// } elseif (substr($code, 0, 1) == "2") {
-		// 	$coupon_code = 'UNIQUECODE3'; // Code
-		// 	$amount = '100'; // Amount
-		// 	$discount_type = 'percent_product'; // Type: fixed_cart, percent, fixed_product, percent_product
-								
-		// 	$coupon = array(
-		// 		'post_title' => $coupon_code,
-		// 		'post_content' => '',
-		// 		'post_status' => 'publish',
-		// 		'post_author' => 1,
-		// 		'post_type'		=> 'shop_coupon'
-		// 	);
-								
-		// 	$new_coupon_id = wp_insert_post( $coupon );
-								
-		// 	// Add meta
-		// 	update_post_meta( $new_coupon_id, 'discount_type', $discount_type );
-		// 	update_post_meta( $new_coupon_id, 'coupon_amount', $amount );
-		// 	update_post_meta( $new_coupon_id, 'individual_use', 'yes' );
-		// 	update_post_meta( $new_coupon_id, 'product_ids', '14' );
-		// 	update_post_meta( $new_coupon_id, 'exclude_product_ids', '' );
-		// 	update_post_meta( $new_coupon_id, 'usage_limit', '1' );
-		// 	update_post_meta( $new_coupon_id, 'usage_limit_per_user', '1' );
-		// 	update_post_meta( $new_coupon_id, 'limit_usage_to_x_items', '1' );
-		// 	update_post_meta( $new_coupon_id, 'expiry_date', '' );
-		// 	update_post_meta( $new_coupon_id, 'apply_before_tax', 'yes' );
-		// 	update_post_meta( $new_coupon_id, 'free_shipping', 'no' );
-		// } elseif (substr($code, 0, 1) == "3") {
-
-		// }
-
 		$this->code  = apply_filters( 'woocommerce_coupon_code', $code );
+		
+		if ($code != "") {
+			$url = "http://apiv2.dcanje.com/getEntel/status/" . $code;
+			$ch = curl_init();
+			//set the url, number of POST vars, POST data
+			curl_setopt($ch,CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			//execute post
+			$result = curl_exec($ch);
+			//close connection
+			curl_close($ch);
+			
+			// $result = file_get_contents($url);
+		 	$data = json_decode($result, true);
+			if ($data["estatus"] == "success" && $this->get_coupon_id_from_code( $code ) == 0) {
+				if ($data["tipo"] == "2x1 martes") {
+					$coupon_code = $code; // Code
+					$amount = '100'; // Amount
+					$discount_type = 'percent_product'; // Type: fixed_cart, percent, fixed_product, percent_product
+										
+					$coupon = array(
+						'post_title' => $code,
+						'post_excerpt' => $data["tipo"],
+						'post_status' => 'publish',
+						'post_author' => 1,
+						'post_type'		=> 'shop_coupon'
+					);
+										
+					$new_coupon_id = wp_insert_post( $coupon );
+					// Add meta
+					update_post_meta( $new_coupon_id, 'discount_type', $discount_type );
+					update_post_meta( $new_coupon_id, 'coupon_amount', $amount );
+					update_post_meta( $new_coupon_id, 'individual_use', 'yes' );
+					update_post_meta( $new_coupon_id, 'product_ids', '' );
+					update_post_meta( $new_coupon_id, 'product_categories', 'a:1:{i:0;i:7;}' );
+					update_post_meta( $new_coupon_id, 'exclude_product_ids', '' );
+					update_post_meta( $new_coupon_id, 'usage_limit', '1' );
+					update_post_meta( $new_coupon_id, 'usage_limit_per_user', '1' );
+					update_post_meta( $new_coupon_id, 'limit_usage_to_x_items', '1' );
+					update_post_meta( $new_coupon_id, 'expiry_date', '' );
+					update_post_meta( $new_coupon_id, 'apply_before_tax', 'yes' );
+					update_post_meta( $new_coupon_id, 'free_shipping', 'no' );
+				} else {
+					$coupon_code = $code; // Code
+					$amount = '15'; // Amount
+					$discount_type = 'percent_product'; // Type: fixed_cart, percent, fixed_product, percent_product
+										
+					$coupon = array(
+						'post_title' => $coupon_code,
+						'post_excerpt' => $data["tipo"],
+						'post_status' => 'publish',
+						'post_author' => 1,
+						'post_type'		=> 'shop_coupon'
+					);
+										
+					$new_coupon_id = wp_insert_post( $coupon );
+										
+					// Add meta
+					update_post_meta( $new_coupon_id, 'discount_type', $discount_type );
+					update_post_meta( $new_coupon_id, 'coupon_amount', $amount );
+					update_post_meta( $new_coupon_id, 'individual_use', 'yes' );
+					update_post_meta( $new_coupon_id, 'product_ids', '' );
+					update_post_meta( $new_coupon_id, 'product_categories', 'a:5:{i:0;i:7;i:1;i:6;i:2;i:9;i:3;i:10;i:4;i:12;}' );
+					update_post_meta( $new_coupon_id, 'exclude_product_ids', '' );
+					update_post_meta( $new_coupon_id, 'usage_limit', '1' );
+					update_post_meta( $new_coupon_id, 'usage_limit_per_user', '1' );
+					update_post_meta( $new_coupon_id, 'limit_usage_to_x_items', '20' );
+					update_post_meta( $new_coupon_id, 'expiry_date', '' );
+					update_post_meta( $new_coupon_id, 'apply_before_tax', 'yes' );
+					update_post_meta( $new_coupon_id, 'free_shipping', 'no' );
+				}
+			}
+		}
 
 		// Coupon data lets developers create coupons through code
 		if ( $coupon = apply_filters( 'woocommerce_get_shop_coupon_data', false, $this->code ) ) {
@@ -663,7 +678,6 @@ class WC_Coupon {
 	public function get_discount_amount( $discounting_amount, $cart_item = null, $single = false ) {
 		$discount      = 0;
 		$cart_item_qty = is_null( $cart_item ) ? 1 : $cart_item['quantity'];
-		// echo $discounting_amount;die();
 		if ( $this->is_type( array( 'percent_product', 'percent' ) ) ) {
 			$discount = $this->coupon_amount * ( $discounting_amount / 100 );
 

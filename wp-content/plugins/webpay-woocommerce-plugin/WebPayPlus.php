@@ -546,7 +546,7 @@ function init_webpayplus_class() {
                         $myPath = $webpay_comun_folder . DIRECTORY_SEPARATOR . "MAC01Normal$TBK_ID_SESION.txt";
                         log_me("INICIANDO LA REVISION MAC PARA " . $myPath, $SUFIJO);
                         //Rescate de los valores informados por transbank
-                        $fic = fopen($myPath, "r");
+                        $fic = fopen($myPath, "w+");
                         $linea = fgets($fic);
                         fclose($fic);
                         $detalle = explode("&", $linea);

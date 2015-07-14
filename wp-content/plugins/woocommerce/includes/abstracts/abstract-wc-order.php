@@ -1824,6 +1824,76 @@ abstract class WC_Abstract_Order {
 		if ( ! $this->id ) {
 			return;
 		}
+
+
+		/*****Cambiamos a completa****/
+		if ($new_status == 'processing' && $this->get_status() != "completed") {
+			$order_verify = new WC_Order($this->id);
+			global $wpdb;
+			foreach( $order_verify->get_items() as $item_id => $item ) {
+				$product_verify = new WC_Product($item["product_id"]);
+				$sku_ticket = $product_verify->get_sku();
+				for ($i = 0; $i < $item["qty"][0]; $i++) {
+					$_product_ticket  = apply_filters( 'woocommerce_order_item_product', $order_verify->get_product_from_item( $item ), $item );
+					$item_meta = new WC_Order_Item_Meta( $item['item_meta'], $_product_ticket );
+					
+					$url = "http://apiv2.dcanje.com/getValle/" . $sku_ticket;
+					$ch = curl_init();
+					//set the url, number of POST vars, POST data
+					curl_setopt($ch,CURLOPT_URL, $url);
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+					//execute post
+					$result = curl_exec($ch);
+					//close connection
+					curl_close($ch);
+				 	$data = json_decode($result, true);
+				    $code = $data["codigo"];
+				    $fecha = '';
+				    $term_list = wp_get_post_terms( $item["product_id"], 'product_cat', array('fields'=>'ids') );
+					$term = get_term_by( 'id', $term_list[0], 'product_cat', 'ARRAY_A' );
+					if ( $term['name'] == "Rental" ) {
+						global $wpdb;
+						$myrows = $wpdb->get_results( "SELECT oim.meta_value, oi.order_item_name FROM wp_woocommerce_order_items oi INNER JOIN wp_woocommerce_order_itemmeta oim ON oim.order_item_id = oi.order_item_id WHERE oi.order_id = '" . $order_verify->get_order_number() . "' AND meta_key = 'Rental - Fecha Rental';" );
+						$fecha = "Fecha Rental: " . $myrows[0]->meta_value;
+					}
+					$titulo = $item['name'];
+					$desc = get_post($item['product_id'])->post_content;
+					$url = get_template_directory_uri() . '/send_ticket.php';
+					$fields_string = "";
+					$fields = array(
+						'code' => urlencode($code),
+						'titulo' => urlencode($titulo),
+						'desc' => urlencode($desc),
+						'fecha' => urlencode($fecha),
+						'url' => urlencode(get_template_directory_uri())
+					);
+					//url-ify the data for the POST
+					foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
+					rtrim($fields_string, '&');
+					//open connection
+					$ch = curl_init();
+					//set the url, number of POST vars, POST data
+					curl_setopt($ch,CURLOPT_URL, $url);
+					curl_setopt($ch,CURLOPT_POST, count($fields));
+					curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+					//execute post
+					$result = curl_exec($ch);
+					//close connection
+					curl_close($ch);
+					$wpdb->insert( 'wp_woocommerce_order_itemmeta', array( 'order_item_id' => $item_id, 'meta_key' => 'Ticket', 'meta_value' => $result ), array( '%d', '%s', '%s' ) );
+				}
+			}
+			$new_status = 'completed';
+
+			foreach( $order_verify->get_used_coupons() as $coupon) {
+				$url_burn = 'http://apiv2.dcanje.com/getEntel/quemar/' . $coupon;
+				$result = file_get_contents($url_burn);
+		        
+		    }
+		}
+		/***********Fin cambio a completa***********/
+
 		// Standardise status names.
 		$new_status = 'wc-' === substr( $new_status, 0, 3 ) ? substr( $new_status, 3 ) : $new_status;
 		$old_status = $this->get_status();
@@ -1890,6 +1960,8 @@ abstract class WC_Abstract_Order {
 	 * @param $transaction_id string Optional transaction id to store in post meta
 	 */
 	public function payment_complete( $transaction_id = '' ) {
+		$new_status = 'completed';
+
 		do_action( 'woocommerce_pre_payment_complete', $this->id );
 		if ( null !== WC()->session ) {
 			WC()->session->set( 'order_awaiting_payment', false );
@@ -1897,70 +1969,8 @@ abstract class WC_Abstract_Order {
 		$valid_order_statuses = apply_filters( 'woocommerce_valid_order_statuses_for_payment_complete', array( 'on-hold', 'pending', 'failed', 'cancelled' ), $this );
 		if ( $this->id && $this->has_status( $valid_order_statuses ) ) {
 			$order_needs_processing = true;
-			$order_verify = new WC_Order($this->id);
-			global $wpdb;
-			foreach( $order_verify->get_items() as $item_id => $item ) {
-				$product_verify = new WC_Product($item["product_id"]);
-				$sku_ticket = $product_verify->get_sku();
-				for ($i = 0; $i < $item["qty"][0]; $i++) {
-					$_product_ticket  = apply_filters( 'woocommerce_order_item_product', $order_verify->get_product_from_item( $item ), $item );
-					$item_meta = new WC_Order_Item_Meta( $item['item_meta'], $_product_ticket );
-					
-					$url = "http://apiv2.dcanje.com/getValle/" . $sku_ticket;
-					$result = file_get_contents($url);
-				 	$data = json_decode($result, true);
-				    $code = $data["codigo"];
-				    $fecha = '';
-				    $term_list = wp_get_post_terms( $item["product_id"], 'product_cat', array('fields'=>'ids') );
-					$term = get_term_by( 'id', $term_list[0], 'product_cat', 'ARRAY_A' );
-					if ( $term['name'] == "Rental" ) {
-						global $wpdb;
-						$myrows = $wpdb->get_results( "SELECT oim.meta_value, oi.order_item_name FROM wp_woocommerce_order_items oi INNER JOIN wp_woocommerce_order_itemmeta oim ON oim.order_item_id = oi.order_item_id WHERE oi.order_id = '" . $order_verify->get_order_number() . "' AND meta_key = 'Rental - Fecha Rental';" );
-						$fecha = "Fecha Rental: " . $myrows[0]->meta_value;
-					}
-					$titulo = $item['name'];
-					$desc = get_post($item['product_id'])->post_content;
-					$url = get_template_directory_uri() . '/send_ticket.php';
-					$fields_string = "";
-					$fields = array(
-						'code' => urlencode($code),
-						'titulo' => urlencode($titulo),
-						'desc' => urlencode($desc),
-						'fecha' => urlencode($fecha),
-						'url' => urlencode(get_template_directory_uri())
-					);
-					//url-ify the data for the POST
-					foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
-					rtrim($fields_string, '&');
-					//open connection
-					$ch = curl_init();
-					//set the url, number of POST vars, POST data
-					curl_setopt($ch,CURLOPT_URL, $url);
-					curl_setopt($ch,CURLOPT_POST, count($fields));
-					curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-					//execute post
-					$result = curl_exec($ch);
-					//close connection
-					curl_close($ch);
-					$wpdb->insert( 'wp_woocommerce_order_itemmeta', array( 'order_item_id' => $item_id, 'meta_key' => 'Ticket', 'meta_value' => $result ), array( '%d', '%s', '%s' ) );
-				}
-			}
-			if ( sizeof( $this->get_items() ) > 0 ) {
-				foreach ( $this->get_items() as $item ) {
-					if ( $item['product_id'] > 0 ) {
-						$_product = $this->get_product_from_item( $item );
-							if ( false !== $_product && ! apply_filters( 'woocommerce_order_item_needs_processing', ! ( $_product->is_downloadable() && $_product->is_virtual() ), $_product, $this->id ) ) {
-							$order_needs_processing = false;
-							continue;
-						}
-					}
-					$order_needs_processing = true;
-					break;
-				}
-			}
-			// $new_order_status = $order_needs_processing ? 'processing' : 'completed';
-			$new_order_status = 'completed';
+			$new_order_status = $order_needs_processing ? 'processing' : 'completed';
+
 			$new_order_status = apply_filters( 'woocommerce_payment_complete_order_status', $new_order_status, $this->id );
 			$this->update_status( $new_order_status );
 			add_post_meta( $this->id, '_paid_date', current_time('mysql'), true );
