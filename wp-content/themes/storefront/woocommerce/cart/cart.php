@@ -108,7 +108,7 @@ do_action( 'woocommerce_before_cart' ); ?>
 		?>
 		<tr>
 			<td colspan="6" class="actions">
-
+				<!--
 				<?php if ( WC()->cart->coupons_enabled() ) { ?>
 						<img src='<?php echo get_template_directory_uri(); ?>/images/entel.png' class='entel'>
 					<div class="coupon">
@@ -119,7 +119,7 @@ do_action( 'woocommerce_before_cart' ); ?>
 					</div>
 				<?php } ?>
 				<br>
-				<br>
+				<br>-->
 				<input type="submit" class="azul-profundo button" name="update_cart" value="<?php _e( 'Update Cart', 'woocommerce' ); ?>" />
 
 				<?php do_action( 'woocommerce_cart_actions' ); ?>

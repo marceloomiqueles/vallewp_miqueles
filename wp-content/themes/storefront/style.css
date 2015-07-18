@@ -1822,6 +1822,7 @@ fieldset {
 }
 
 .entel-logo {
+  display: none;
   position: absolute;
   margin: 0 50%;
   left: -120px;
@@ -1859,6 +1860,7 @@ p.site-description, ul.menu li.current-menu-item > a {
 }
 
 .entel {
+  display: none;
   width: 200px;
   float: left;
 }

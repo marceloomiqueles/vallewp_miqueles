@@ -133,7 +133,7 @@ if ( ! function_exists( 'storefront_secondary_navigation' ) ) {
 		}
 		if( is_front_page() ) { ?>
 		<div class='bajar hidden-xs'></div>
-		<div class='entel-logo'></div>
+		<!--<div class='entel-logo'></div>-->
 		<?php
 		}
 	}

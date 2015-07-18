@@ -1833,12 +1833,17 @@ class WC_Cart {
 
 				foreach ( $this->coupons as $code => $coupon ) {
 					if ( $coupon->is_valid() && ( $coupon->is_valid_for_product( $product, $values ) || $coupon->is_valid_for_cart() ) ) {
-						$discount_amount = $coupon->get_discount_amount( $price, $values, $single = true );
+						$term_list = wp_get_post_terms( $values["product_id"], 'product_cat', array('fields'=>'ids') );
+						$term = get_term_by( 'id', $term_list[0], 'product_cat', 'ARRAY_A' );
+						
+						if ($coupon->amount == 15 && $term['name'] == "Tickets")
+							$discount_amount = $price - ($product->regular_price - $coupon->get_discount_amount( $product->regular_price, $values, $single = true ));
+						else
+							$discount_amount = $coupon->get_discount_amount( $price, $values, $single = true );
 						/*MMiqueles*/
 						$cantidad 		 = min(max(min($values['quantity'],  4 - $final_count), 0), 4 );
 						$price           = $price - (( $discount_amount * $cantidad) / $values['quantity']);
 						/*MMiqueles Fin*/
-
 						// Store the totals for DISPLAY in the cart
 
 						if ( $add_totals ) {
